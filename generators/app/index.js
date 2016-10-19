@@ -2,6 +2,8 @@
 'use strict';
 var yeoman = require('yeoman-generator');
 var chalk = require('chalk');
+var userinfo = require('userinfo');
+var _ = require('lodash');
 
 module.exports = yeoman.Base.extend({
   prompting: function () {
@@ -54,11 +56,13 @@ module.exports = yeoman.Base.extend({
               '\n' +
       'Getting started to create ' + chalk.yellow('koiki') + ' project'
     );
+    var appname = _.kebabCase(this.appname);
+
     return this.prompt([{
       type: 'input',
       name: 'app',
       message: 'Please input ' + chalk.yellow('app') + ' name',
-      default: this.config.name,
+      default: appname,
       validate: function (input) {
         return input !== '';
       }
@@ -74,6 +78,7 @@ module.exports = yeoman.Base.extend({
       type: 'input',
       name: 'author',
       message: 'Please input ' + chalk.yellow('author') + ' name',
+      default: userinfo.whoami(),
       validate: function (input) {
         return input !== '';
       }
@@ -81,7 +86,7 @@ module.exports = yeoman.Base.extend({
       type: 'input',
       name: 'globalHost',
       message: 'Please input ' + chalk.yellow('global app host'),
-      default: this.config.name + '.herokuapp.com',
+      default: appname + '.herokuapp.com',
       validate: function (input) {
         return input !== '';
       }
