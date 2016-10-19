@@ -10,11 +10,31 @@ npm install -g yo
 npm install -g generator-koiki
 ```
 
-Then generate your new project:
+### Generate your new project
 
 ```bash
 yo koiki
 ```
+
+### Generate container
+
+```bash
+yo koiki:container
+```
+
+### Generate component
+
+```bash
+yo koiki:component
+```
+
+### Generate reducer
+
+```bash
+yo koiki:reducer
+```
+
+
 
 ## Getting To Know Yeoman
 

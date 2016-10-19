@@ -59,10 +59,11 @@ module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     'main': [
-      'webpack-hot-middleware/client?path=http://' + host + ':' + port + '/__webpack_hmr',
+      `webpack-dev-server/client?http://${host}:${port}/`,
       './src/client.js'
     ]
   },
+  inline: true,
   output: {
     path: assetsPath,
     filename: '[name]-[hash].js',
@@ -94,8 +95,6 @@ module.exports = {
     extensions: ['', '.json', '.js', '.jsx', '.properties']
   },
   plugins: [
-    // hot reload
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.IgnorePlugin(/webpack-stats\.json$/),
     new webpack.DefinePlugin({
       __CLIENT__: true,
