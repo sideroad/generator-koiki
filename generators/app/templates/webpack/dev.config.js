@@ -31,29 +31,6 @@ combinedPlugins = combinedPlugins.concat(babelrcObjectDevelopment.plugins);
 
 var babelLoaderQuery = Object.assign({}, babelrcObjectDevelopment, babelrcObject, {plugins: combinedPlugins});
 delete babelLoaderQuery.env;
-
-babelLoaderQuery.plugins = babelLoaderQuery.plugins || [];
-var reactTransform = null;
-for (var i = 0; i < babelLoaderQuery.plugins.length; ++i) {
-  var plugin = babelLoaderQuery.plugins[i];
-  if (Array.isArray(plugin) && plugin[0] === 'react-transform') {
-    reactTransform = plugin;
-  }
-}
-
-if (!reactTransform) {
-  reactTransform = ['react-transform', {transforms: []}];
-  babelLoaderQuery.plugins.push(reactTransform);
-}
-if (!reactTransform[1] || !reactTransform[1].transforms) {
-  reactTransform[1] = Object.assign({}, reactTransform[1], {transforms: []});
-}
-reactTransform[1].transforms.push({
-  transform: 'react-transform-hmr',
-  imports: ['react'],
-  locals: ['module']
-});
-
 module.exports = {
   devtool: 'inline-source-map',
   context: path.resolve(__dirname, '..'),
@@ -100,7 +77,6 @@ module.exports = {
       __CLIENT__: true,
       __SERVER__: false,
       __DEVELOPMENT__: true,
-      __DEVTOOLS__: true  // <-------- DISABLE redux-devtools HERE
     }),
     webpackIsomorphicToolsPlugin.development()
   ],
