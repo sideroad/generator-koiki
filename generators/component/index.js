@@ -27,8 +27,13 @@ module.exports = yeoman.Base.extend({
       this.destinationPath('src/components/' + _.upperFirst(_.camelCase(component)) + '.jsx'),
       {
         camel: _.camelCase(component),
-        capitalize: _.upperFirst(_.camelCase(component))
+        capitalize: _.upperFirst(_.camelCase(component)),
+        kebab: _.kebabCase(component)
       }
+    );
+    this.fs.copyTpl(
+      this.templatePath('component.less'),
+      this.destinationPath('src/css/' + _.kebabCase(component) + '.less')
     );
   }
 

@@ -13,6 +13,12 @@ App.propTypes = {
   children: PropTypes.element,
 };
 
+App.contextTypes = {
+  lang: PropTypes.string.isRequired,
+  fetcher: PropTypes.object.isRequired,
+  i18n: PropTypes.object.isRequired
+};
+
 export default asyncConnect([{
   promise: ({ store: { dispatch } }) => {
     const promises = [];

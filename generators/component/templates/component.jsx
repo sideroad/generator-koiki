@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const styles = require('../css/<%= camel %>.less');
+const styles = require('../css/<%= kebab %>.less');
 
 const <%= capitalize %> = props =>
   <div

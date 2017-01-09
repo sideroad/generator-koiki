@@ -13,6 +13,12 @@ const <%- capitalize %> = props =>
   <%- propTypes %>
 };
 
+<%- capitalize %>.contextTypes = {
+  lang: PropTypes.string.isRequired,
+  fetcher: PropTypes.object.isRequired,
+  i18n: PropTypes.object.isRequired
+};
+
 const connected = connect(
   state => ({
     <%- states %>

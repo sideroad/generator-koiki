@@ -15,6 +15,12 @@ People.propTypes = {
   people: PropTypes.array.isRequired
 };
 
+People.contextTypes = {
+  lang: PropTypes.string.isRequired,
+  fetcher: PropTypes.object.isRequired,
+  i18n: PropTypes.object.isRequired
+};
+
 const connected = connect(
   state => ({
     people: state.person.items

@@ -13,6 +13,7 @@ const Home = (props, context) =>
 
 Home.contextTypes = {
   lang: PropTypes.string.isRequired,
+  fetcher: PropTypes.object.isRequired,
   i18n: PropTypes.object.isRequired
 };
 

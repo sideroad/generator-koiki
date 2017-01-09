@@ -77,6 +77,11 @@ module.exports = {
       __CLIENT__: true,
       __SERVER__: false,
       __DEVELOPMENT__: true,
+      'process.env': {
+        NODE_ENV: '"' + process.env.NODE_ENV + '"',
+        GLOBAL_HOST: '"' + process.env.GLOBAL_HOST + '"',
+        GLOBAL_PORT: '"' + process.env.GLOBAL_PORT + '"',
+      }
     }),
     webpackIsomorphicToolsPlugin.development()
   ],
