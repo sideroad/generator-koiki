@@ -35,6 +35,19 @@ yo koiki:reducer
 ```
 
 
+## Contribution
+
+### How to test to create app
+There is a directory to test generator.
+You can create test app for it.
+
+```bash
+npm link
+cd test-app
+yo koiki
+cd ..
+npm unlink
+```
 
 ## Getting To Know Yeoman
 
