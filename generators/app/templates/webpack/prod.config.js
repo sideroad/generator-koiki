@@ -18,7 +18,7 @@ module.exports = {
   context: path.resolve(__dirname, '..'),
   entry: {
     'main': [
-      './src/client.js'
+      path.resolve(__dirname, '../src/client.js')
     ]
   },
   output: {
@@ -28,33 +28,96 @@ module.exports = {
     publicPath: '/dist/'
   },
   module: {
-    loaders: [
-      { test: /\.jsx?$/, exclude: /node_modules/, loaders: [strip.loader('debug'), 'babel']},
-      { test: /\.json$/, loader: 'json-loader' },
-      { test: /\.less$/, loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!less?outputStyle=expanded&sourceMap=true&sourceMapContents=true') },
-      // { test: /\.less$/, loader: 'style!css!less' },
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', 'css?modules&importLoaders=2&sourceMap!autoprefixer?browsers=last 2 version!sass?outputStyle=expanded&sourceMap=true&sourceMapContents=true') },
-      { test: /\.woff(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
-      { test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
-      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
-      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
-      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
-      { test: webpackIsomorphicToolsPlugin.regular_expression('images'), loader: 'url-loader?limit=10240' }
+    rules: [
+      { test: /\.jsx?$/, exclude: /node_modules/, use: [strip.loader('debug'), {
+        loader: 'buble-loader',
+        options: {
+          objectAssign: 'Object.assign'
+        }
+      }]},
+      { test: /\.css$/, use: ExtractTextPlugin.extract({ fallback: 'style-loader', use: 'css-loader' }) },
+      {
+        test: /\.less$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [{
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 2,
+              sourceMap: true
+            }
+          }, {
+            loader: 'less-loader',
+            options: {
+              outputStyle: 'expanded',
+              sourceMap: true,
+              sourceMapContents: true
+            }
+          }]
+        })
+      },
+      {
+        test: /\.scss$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [{
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 2,
+              sourceMap: true
+            }
+          }, {
+            loader: 'sass-loader',
+            options: {
+              outputStyle: 'expanded',
+              sourceMap: true,
+              sourceMapContents: true
+            }
+          }]
+        })
+      },
+      { test: /\.woff2?(\?v=\d+\.\d+\.\d+)?$/, use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          mimetype: 'application/font-woff'
+        }
+      }]},
+      { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          mimetype: 'application/octet-stream'
+        }
+      }]},
+      { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, use: "file-loader" },
+      { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 10000,
+          mimetype: 'image/svg+xml'
+        }
+      }]},
+      { test: webpackIsomorphicToolsPlugin.regular_expression('images'), use: 'url-loader' }
     ]
   },
-  progress: true,
   resolve: {
-    modulesDirectories: [
-      'src',
+    modules: [
+      path.join(__dirname, '../src'),
       'node_modules'
     ],
-    extensions: ['', '.json', '.js', '.jsx']
+    extensions: ['.json', '.js', '.jsx']
   },
   plugins: [
-    new CleanPlugin([relativeAssetsPath]),
+    new CleanPlugin([assetsPath], { root: path.join(__dirname, '..')}),
 
     // css files from the extract-text-plugin loader
-    new ExtractTextPlugin('[name]-[chunkhash].css', {allChunks: true}),
+    new ExtractTextPlugin({
+      filename: '[name]-[chunkhash].css',
+      allChunks: true
+    }),
     new webpack.DefinePlugin({
       __CLIENT__: true,
       __SERVER__: false,
@@ -71,15 +134,6 @@ module.exports = {
         NODE_ENV: '"' + process.env.NODE_ENV + '"',
         GLOBAL_HOST: '"' + process.env.GLOBAL_HOST + '"',
         GLOBAL_PORT: '"' + process.env.GLOBAL_PORT + '"',
-      }
-    }),
-
-    // optimizations
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
       }
     }),
 
